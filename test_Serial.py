@@ -1,5 +1,5 @@
 import pytest
-from Serial import ser, init_serial, FRAME, ARG_1, ARG_2
+from Serial import ser, init_serial, FRAME, ARG_1, ARG_2, CTRL, ADDR
 test_adress = 9
 
 def test_init_Serial():
