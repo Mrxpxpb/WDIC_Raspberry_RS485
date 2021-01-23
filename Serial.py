@@ -54,4 +54,15 @@ def init_serial():
     else:
         return "UART Bridge not found"
 
+def write_frame(adress, controll = CTRL.NONE.value, argument_1 = ARG_1.NONE.value, argument_2 = ARG_2.NONE.value, data = [0] * 8): 
+    if ser.is_open:
+        if adress < 65536 and adress > -1 and adress != None:
+            MSB = (adress >> 8) & 0xff
+            LSB = adress & 0xff
+            MSB = struct.pack('>B',MSB)            
+            LSB = struct.pack('>B',LSB)
+            print(LSB)            
+        else: 
+            return "Wrong Adress value"
+        
    
