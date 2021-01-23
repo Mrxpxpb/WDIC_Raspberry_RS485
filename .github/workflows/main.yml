@@ -3,7 +3,7 @@
 name: SSH Raspberry Deployment
 on :
   push:
-    branches: [ production ]
+    branches: [ main ]
 jobs:
   build:
     runs-on: ubuntu-latest
