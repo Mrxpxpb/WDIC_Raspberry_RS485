@@ -11,7 +11,11 @@ class FRAME(enum.Enum):
     START = 2
     STOP = 3
     LF = 10
-    
+
+class ADDR(enum.Enum):
+    BROADCAST = 0
+    MASTER = 1
+
 class CTRL(enum.Enum):
     NONE = 0
     ADR = 1
