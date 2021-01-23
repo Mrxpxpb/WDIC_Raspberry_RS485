@@ -7,6 +7,12 @@ import enum
 vid_pid ="10c4:ea60"
 ser = serial.Serial()
 
+class FRAME(enum.Enum):
+    START = 2
+    STOP = 3
+    LF = 10
+    
+
 def init_serial():
     port = usb.get_port(vid_pid)
     if port != 0:
@@ -21,3 +27,5 @@ def init_serial():
         return "starting"
     else:
         return "UART Bridge not found"
+
+   
