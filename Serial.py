@@ -64,5 +64,16 @@ def write_frame(adress, controll = CTRL.NONE.value, argument_1 = ARG_1.NONE.valu
             print(LSB)            
         else: 
             return "Wrong Adress value"
-        
+    else:
+            return "CTRL wrong size"
+
+        if argument_1 < 256 and argument_1 > -1:
+            argument_1 = struct.pack('>B',argument_1)
+        else:
+            return "ARG_1 wrong size"
+
+        if argument_2 < 256 and argument_2 > -1:
+            argument_2 = struct.pack('>B',argument_2)
+        else:
+            return "ARG_2 wrong size"    
    

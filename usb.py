@@ -29,4 +29,4 @@ def get_port(vid_pid):
                 return device.device
                 break
     return 0
-
+    
