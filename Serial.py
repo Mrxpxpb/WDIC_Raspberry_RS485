@@ -64,9 +64,11 @@ def write_frame(adress, controll = CTRL.NONE.value, argument_1 = ARG_1.NONE.valu
             print(LSB)            
         else: 
             return "Wrong Adress value"
-    else:
+        if controll < 256 and controll > -1:
+            controll = struct.pack('>B',controll)
+        else:
             return "CTRL wrong size"
-
+        
         if argument_1 < 256 and argument_1 > -1:
             argument_1 = struct.pack('>B',argument_1)
         else:
@@ -76,4 +78,24 @@ def write_frame(adress, controll = CTRL.NONE.value, argument_1 = ARG_1.NONE.valu
             argument_2 = struct.pack('>B',argument_2)
         else:
             return "ARG_2 wrong size"    
-   
+        
+        ser.write(struct.pack('>B', FRAME.START.value))
+        ser.write(MSB)
+        ser.write(LSB)
+        ser.write(controll)
+        ser.write(argument_1)
+        ser.write(argument_2)
+
+        for i in range(8):
+            if data[i] is None:
+                ser.write(struct.pack('>B',0))
+            else:
+                if data[i] < 256 and data[i] >= 0:
+                    ser.write(struct.pack('>B',data[i]))
+                else:
+                    return "Data Wrong size"
+        ser.write(struct.pack('>B', FRAME.STOP.value))
+        ser.write(struct.pack('>B', FRAME.LF.value))
+        return "Frame sent"
+    else:
+        return "Port not open"
