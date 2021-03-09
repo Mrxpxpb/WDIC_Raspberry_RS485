@@ -46,6 +46,13 @@ class ARG_1(enum.Enum):
 class ARG_2(enum.Enum):
     NONE = 0
 
+class ERROR(enum.Enum):
+    NONE = 0
+    TIMEOUT_ERROR = 1
+    STX_ERROR = 2
+    STOP_LF_ERROR = 3
+    LENGTH_MISMATCH_ERROR = 4
+
 def init_serial():
     if port != 0:
         ser.port = port
@@ -60,21 +67,22 @@ def init_serial():
     else:
         print("UART Bridge not found")
 
+
 def write_frame(adress, controll = CTRL.NONE.value, argument_1 = ARG_1.NONE.value, argument_2 = ARG_2.NONE.value, data = [0] * 8): 
     if ser.is_open:
-        if adress < 65536 and adress > -1 and adress != None:
-            MSB = (adress >> 8) & 0xff
-            LSB = adress & 0xff
-            MSB = struct.pack('>B',MSB)            
-            LSB = struct.pack('>B',LSB)
-            print(LSB)            
+        safetime = 1e-3
+        if adress < 256 and adress >= 0 and adress != None:
+            adress = "0x{:02x}".format(adress)
+            #print(adress)
+            MSB = adress[2].encode()
+            LSB = adress[3].encode()   
         else: 
             return "Wrong Adress value"
         if controll < 256 and controll > -1:
             controll = struct.pack('>B',controll)
         else:
             return "CTRL wrong size"
-        
+
         if argument_1 < 256 and argument_1 > -1:
             argument_1 = struct.pack('>B',argument_1)
         else:
@@ -83,25 +91,38 @@ def write_frame(adress, controll = CTRL.NONE.value, argument_1 = ARG_1.NONE.valu
         if argument_2 < 256 and argument_2 > -1:
             argument_2 = struct.pack('>B',argument_2)
         else:
-            return "ARG_2 wrong size"    
-        
+            return "ARG_2 wrong size"
+        ser.reset_input_buffer()
+        ser.reset_output_buffer()  
         ser.write(struct.pack('>B', FRAME.START.value))
+        time.sleep(safetime)
         ser.write(MSB)
+        time.sleep(safetime)
         ser.write(LSB)
+        time.sleep(safetime)
         ser.write(controll)
+        time.sleep(safetime)
         ser.write(argument_1)
+        time.sleep(safetime)
         ser.write(argument_2)
-
+        time.sleep(safetime)
+        
         for i in range(8):
             if data[i] is None:
                 ser.write(struct.pack('>B',0))
+                time.sleep(safetime)
+
+            elif type(data[i]) is not int:
+                ser.write(data[i])
+                time.sleep(safetime)
             else:
-                if data[i] < 256 and data[i] >= 0:
-                    ser.write(struct.pack('>B',data[i]))
-                else:
-                    return "Data Wrong size"
+                ser.write(struct.pack('>B',data[i]))
+                time.sleep(safetime)
+
         ser.write(struct.pack('>B', FRAME.STOP.value))
+        time.sleep(safetime)
         ser.write(struct.pack('>B', FRAME.LF.value))
+        time.sleep(safetime)
         return "Frame sent"
     else:
         return "Port not open"
