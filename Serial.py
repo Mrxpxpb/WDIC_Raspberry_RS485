@@ -47,19 +47,18 @@ class ARG_2(enum.Enum):
     NONE = 0
 
 def init_serial():
-    port = usb.get_port(vid_pid)
     if port != 0:
         ser.port = port
         ser.baudrate = 57600
         ser.bytesize = 8
         ser.stopbits = 1
         ser.parity = serial.PARITY_NONE
-        ser.timeout = 5
+        ser.timeout = 2
         if ser.is_open !=True:
             ser.open()
-        return "starting"
+        print("starting")
     else:
-        return "UART Bridge not found"
+        print("UART Bridge not found")
 
 def write_frame(adress, controll = CTRL.NONE.value, argument_1 = ARG_1.NONE.value, argument_2 = ARG_2.NONE.value, data = [0] * 8): 
     if ser.is_open:

@@ -18,7 +18,7 @@ def get_vid_pid():
         pvids.append(device.get('id'))
     return pvids
 
-def get_port(vid_pid):
+def get_port_vidpid(vid_pid):
     vp= vid_pid.split(':')
     pid = vp[-1]
     vid = vp[0]
@@ -29,4 +29,14 @@ def get_port(vid_pid):
                 return device.device
                 break
     return 0
-    
+def get_port_manufacturer(manufacturer):
+ devices = list_ports.comports()
+ for device in devices:
+     if device.manufacturer == manufacturer:
+        return device.name
+        break 
+
+def show_available_devices():
+    devices = list_ports.comports()
+    for device in devices:
+        print(f'Port: "{device.name}"\n\tManufacturer: "{device.manufacturer}"\n\tDescription: "{device.description}", \n\tHWID: "{device.hwid}"')    
