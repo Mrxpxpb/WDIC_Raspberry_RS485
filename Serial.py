@@ -176,3 +176,94 @@ def set_io(device_adr, number, out: bool, on_off: bool) -> str:
         if out == 1:
             return write_frame(adress = device_adr, controll = CTRL.IO1.value, argument_1 = ARG_1.SET.value, argument_2 = on_off, data = [0, 0, 0, 0, 0, 0, 0, 0])
         return write_frame(adress = 0, controll = CTRL.IO1.value, argument_1 = ARG_1.READ.value, argument_2 = on_off, data = [0, 0, 0, 0, 0, 0, 0, 0])
+
+def read_frame(loopback: bool):
+    global buffer 
+    s = ''
+    error_sent = ERROR.NONE.value
+    error_received = ERROR.NONE.value
+    if loopback:
+        (s, data, error_sent, error_received) = read_frame(False)
+        error_sent = error_received
+        s += '\t' * 6 + '|\n'
+        s += '\t' * 6 + 'V\n'
+    line = ser.readline()
+    if loopback is False:
+        buffer += str(line) + "\n"
+    s += byteframe_to_string(line)[0]
+    data = byteframe_to_string(line)[1]
+    error_received = byteframe_to_string(line)[2]
+    return s, data, error_sent, error_received
+def byteframe_to_string(b = [0] * 8):
+    dashes = '-' * 100 + '\n'
+    lines = END + '_' * 100 + '\n'
+    s = ''
+    s += f'\nBytearray: {b}\n' 
+
+    if b == b'':
+        s = '\n' + lines
+        s += f'Received Byte Array: {b} \t\n' + RED
+        return s + f'{ERROR.TIMEOUT_ERROR.name}\n' + lines, 0, ERROR.TIMEOUT_ERROR
+
+    if len(b) != 16:
+        s = '\n' + lines
+        s += f'Received Byte Array: {b} \t\n' + RED
+        return s + f'{ERROR.LENGTH_MISMATCH_ERROR.name}: {len(b)}\n' + lines, 0, ERROR.LENGTH_MISMATCH_ERROR
+
+    if b[0] != 2:
+        s = '\n' + lines
+        s += f'Received Byte Array: {b} \t\n' + RED
+        return s + f'{ERROR.STX_ERROR.name}: b[0]= {b[0]}\n' + lines, 0, ERROR.STX_ERROR
+
+    if b[14] != 3 or b[15] != 10:
+        s = '\n' + lines
+        s += f'Received Byte Array: {b} \t\n' + RED
+        return s + f'{ERROR.STOP_LF_ERROR.name}: b[14] = {b[14]}, b[15] = {b[15]}\n' + lines, 0, ERROR.STOP_LF_ERROR
+
+    s = '\n' + dashes 
+
+    if b != None:
+        s += f'\nSTX: {b[0]} \t'
+        #print(b)
+        #print(b[1:3])
+        #print("HMM: " + b[1:3].decode("ascii"))
+        address = int(b[1:3].decode("ascii"), 16)
+        try:
+            s += f'Adresse: {YELLOW}{ADDR(address).name}{END} ' + END
+        except:
+            s += f'Adresse: {YELLOW}{address}{END} \t'
+        
+        s += f'CTRL: {CYAN}{CTRL(b[3]).name}{END} \t'
+
+        try:
+            s += f'ARG_1: {GREEN}{ARG_1(b[4]).name}{END} \t'
+        except:
+            s += f'ARG_1: {GREEN}{b[4]}{END} \t'
+
+        try:
+            s += f'ARG_2: {GREEN}{ARG_2(b[5]).name}{END} \t'
+        except:
+            s += f'ARG_2: {GREEN}{b[5]}{END} \t'
+
+        s += f'STOP: {b[14]} \t'
+        s += f'LF: {b[15]} \t\n'
+
+        s1 = s2 = s3 = s4 =''
+
+        for i in range(8):
+            s1 += f'\t| {b[6 + i]}'
+            s2 += f'\t|   {i}'
+            s3 += '\t| ' + '0x{:02x}'.format(b[6 + i])
+            s4 += '\t| ' + chr(b[6 + i])
+            
+        s += '\nDATA: ' + UNDERLINE + '\nNr.: ' + s2 + '\t|' + END + '\nDEC: ' + s1 + '\t|\nHEX: ' + s3 +'\t|\nASCII: ' + s4 + '\t|\n'
+        s += dashes + '\n'
+    data = b[6:14]
+    return s, data, ERROR.NONE
+    
+def print_frame_error(loopback: bool):
+    (s, data, error_sent, error_received) = read_frame(loopback)
+    if error_sent != ERROR.NONE or error_received != ERROR.NONE:
+        print(s)
+    
+    return s, error_sent, error_received
