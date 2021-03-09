@@ -5,7 +5,13 @@
 ![alt text](https://github.com/Mrxpxpb/WDIC_Raspberry_RS485/blob/main/data_frame_structure.PNG)
 
 # Zuweisung der Befehlswerte beispielhaft
+<<<<<<< HEAD
 
+=======
+CTRL: Befehl
+ARG1 / ARG2: Zusatzoptionen
+DATA[0:8] Datenbytes
+>>>>>>> 355c6feefcd025aa1417f05bb52d19890b87827d
 ![alt text](https://github.com/Mrxpxpb/WDIC_Raspberry_RS485/blob/main/befehlswerte.PNG)
 
 # Ping am Oszilloskop
