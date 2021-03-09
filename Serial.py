@@ -11,33 +11,31 @@ class FRAME(enum.Enum):
     START = 2
     STOP = 3
     LF = 10
-
 class ADDR(enum.Enum):
     BROADCAST = 0
     MASTER = 1
 
 class CTRL(enum.Enum):
     NONE = 0
-    ADR = 1
-    GET_STATE = 7
-    GET_FRQ = 18
-    GET_L = 4
-    IO0 = 5
-    IO1 = 6
-    PING = 17
+    ADR = 65
+    GET_STATE = 83
+    GET_FRQ = 70
+    GET_L = 76
+    IO0 = 48
+    IO1 = 49
+    CALIBRATE = 67
+    PING = 80
 
 class ARG_1(enum.Enum):
     NONE = 0
-    REMOVE  = 7
-    GIVE = 8
-    MEASURE_TIME = 100
-    SET_IN_OUT = 10
-    READ = 11
-    SET = 12
+    REMOVE  = 82
+    GIVE = 71
+    SET_IN_OUT = 68
+    READ = 66
+    SET = 73
 
 class ARG_2(enum.Enum):
     NONE = 0
-    
 
 def init_serial():
     port = usb.get_port(vid_pid)
