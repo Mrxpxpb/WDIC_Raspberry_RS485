@@ -36,7 +36,10 @@ def get_port_manufacturer(manufacturer):
         return device.name
         break 
 
-def show_available_devices():
+def show_available_devices() -> dict:
+    device_dict = dict()
     devices = list_ports.comports()
     for device in devices:
-        print(f'Port: "{device.name}"\n\tManufacturer: "{device.manufacturer}"\n\tDescription: "{device.description}", \n\tHWID: "{device.hwid}"')    
+        #print(f'Port: "{device.name}"\n\tManufacturer: "{device.manufacturer}"\n\tDescription: "{device.description}", \n\tHWID: "{device.hwid}"')
+        device_dict[device.name] = [device.manufacturer, device.description, device.hwid]
+    return device_dict    
