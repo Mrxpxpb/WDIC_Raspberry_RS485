@@ -53,7 +53,7 @@ class ERROR(enum.Enum):
     STOP_LF_ERROR = 3
     LENGTH_MISMATCH_ERROR = 4
 
-def init_serial():
+def init_serial(port):
     if port != 0:
         ser.port = port
         ser.baudrate = 57600
@@ -126,3 +126,53 @@ def write_frame(adress, controll = CTRL.NONE.value, argument_1 = ARG_1.NONE.valu
         return "Frame sent"
     else:
         return "Port not open"
+
+def give_all_adr(tries):
+    retries = tries
+    error_sent = ERROR.NONE
+    error_received = ERROR.NONE
+    s = ''
+    i = 40
+    adresses = []
+    remove_all_adresses()
+
+    if tries <= 1:
+        print("tries must be greater than 0")
+        return 
+    while error_received != ERROR.TIMEOUT_ERROR:
+
+        give_adr(i,ARG_1.GIVE.value)
+        (s, data, error_sent, error_received) = read_frame(True)
+        adresses.append(i)
+        if error_received != ERROR.TIMEOUT_ERROR and error_received != ERROR.NONE:
+            print(f"Unexpected Error occured during adress assignment: {error_received.name}")
+            print(s)
+            return
+        i+=1
+    adresses.pop(-1)
+    if adresses == []:
+        return None    
+    return adresses
+def give_adr(adress: int, remove_give):
+    if adress < 256 and adress > -1 and adress != None:
+        adress = "0x{:02x}".format(adress)
+        MSB = adress[2].encode()
+        LSB = adress[3].encode() 
+        write_frame(adress = 0, controll = CTRL.ADR.value, argument_1 = remove_give, data = [MSB, LSB, 0, 0, 0, 0, 0, 0])
+        return "Frame sent"
+    else:
+        return "Wrong Adress value"
+def remove_all_adresses():
+    write_frame(adress = ADDR.BROADCAST.value, controll = CTRL.ADR.value,argument_1 = ARG_1.REMOVE.value ,data = [0, 0, 0, 0, 0, 0, 0, 0])
+    time.sleep(1)
+def set_io(device_adr, number, out: bool, on_off: bool) -> str:
+    on_off = int(on_off == True)
+    if number == 0:
+        if out == 1:
+            return write_frame(adress = device_adr, controll = CTRL.IO0.value, argument_1 = ARG_1.SET.value, argument_2 = on_off, data = [0, 0, 0, 0, 0, 0, 0, 0])
+        return write_frame(adress = 0, controll = CTRL.IO0.value, argument_1 = ARG_1.READ.value, argument_2 = on_off, data = [0, 0, 0, 0, 0, 0, 0, 0])
+        
+    elif number == 1:
+        if out == 1:
+            return write_frame(adress = device_adr, controll = CTRL.IO1.value, argument_1 = ARG_1.SET.value, argument_2 = on_off, data = [0, 0, 0, 0, 0, 0, 0, 0])
+        return write_frame(adress = 0, controll = CTRL.IO1.value, argument_1 = ARG_1.READ.value, argument_2 = on_off, data = [0, 0, 0, 0, 0, 0, 0, 0])
