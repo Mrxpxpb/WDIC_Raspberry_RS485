@@ -19,7 +19,7 @@ def main():
         print(f'{i}: {device}')
         list = device_dict[device]
         for info in list:
-            print(f'\t'+info)
+            print(f'\t'+ str(info))
     
     num = get_port()
 
