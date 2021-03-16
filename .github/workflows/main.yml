@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Connect
         run: |
-          #sudo apt-get install sshpass
+          sudo apt-get install sshpass
           #sudo ssh -tt -o StrictHostKeyChecking=No -p 69 pi@${{ secrets.VPS_HOST }}
           
           echo 
