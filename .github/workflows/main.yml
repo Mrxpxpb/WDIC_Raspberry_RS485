@@ -36,6 +36,7 @@ jobs:
           "cd /home/pi/WDIC_Raspberry_RS485 \
           && git fetch --all \
           && git reset --hard origin \
+          
           "
           echo 
           echo ${bold}Run Serial.py $normal
