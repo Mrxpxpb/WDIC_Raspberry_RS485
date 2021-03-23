@@ -1,12 +1,11 @@
 # WDIC_Raspberry_RS485
 
-# Aufbau des Frames
+# Frame Structure
 ## Master Request
 
 |ADR_MSB| |ADR_LSB| |CTRL| | | |ARG_1| | | |ARG_2| | | |DATA_0|DATA_1|DATA_2|DATA_3|DATA_4|DATA_5|DATA_6|DATA_7|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |DEC|HEX|DEC|HEX|ASCII|DEC|HEX|Function|ASCII|DEC|HEX|NAME|ASCII|DEC|HEX|NAME|-|-|-|-|-|-|-|-|
-| | | | | | | | | | | | | | | | | | | | | | | | |
 |0|0x00|0|0x00|A|65|0x41|ADR|G|71|0x47|GIVE| |0|0x00|-|ADR_MSB|ADR_LSB|-|-|-|-|-|-|
 |0|0x00|0|0x00| | | | |R|82|0x52|REMOVE| |0|0x00|-| | | | | | | | |
 |var| |var| |S|83|0x53|GET_STATE| |0|0x00|-| |0|0x00|-|-|-|-|-|-|-|-|-|
@@ -18,16 +17,12 @@
 |var| |var| |1|49|0x31|IO1|D|68|0x44|SET_IN_OUT| |var|var|IN_OUT|-|-|-|-|-|-|-|-|
 |var| |var| | | | | |B|66|0x42|READ| |0|0x00|-|-|-|-|-|-|-|-|-|
 |var| |var| | | | | |I|73|0x49|SET| |0|0x00|ON_OFF|-|-|-|-|-|-|-|-|
-|var| |var| |C|67|0x43|CALIBRATE| |-|-|-| |0|0x00|-|FRQ_MSB|FRQ_LSB|-|-|-|-|-|-|
-|var| |var| | | |0x00| | |-|-|-| |0|0x00|-|-|-|-|-|-|-|-|-|
-|var| |var| | | |0x00| | |-|-|-| |0|0x00|-|-|-|-|-|-|-|-|-|
-|var| |var| |P|80|0x50|PING| |-|-|-| |0|0x00|-|-|-|-|-|-|-|-|-|
+
 
 ## Slave Response
 
 |DEC|HEX|DEC|HEX|ASCII|DEC|HEX|Function| |DEC|HEX|NAME| |DEC|HEX|NAME|-|-|-|-|-|-|-|-|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| | | | | | | | | | | | | | | | | | | | | | | | |
 |0|0x00|1|0x01|A|65|0x41|ADR| |71|0x47|GIVE| |1|0x01|-|-|-|-|-|-|-|-|-|
 |0|0x00|1|0x01|S|83|0x53|GET_STATE| |0|0x00|-| |0|0x00|-|IO0_IN_OUT|IO0_STATE|IO1_IN_OUT|IO1_STATE|-|-|-|-|
 |0|0x00|1|0x01|F|70|0x46|GET_FRQ| |0|0x00|-| |0|0x00|-|FRQ_MSB|FRQ|FRG|FRQ_LSB| | | | |
@@ -38,14 +33,16 @@
 |0|0x00|1|0x01|1|49|0x31|IO1| |68|0x44|SET_IN_OUT| |var|var|IN_OUT|IN_OUT|-|-|-|-|-|-|-|
 |0|0x00|1|0x01| | | |0| |66|0x42|READ| |0|0x00|-|READ_IO1|-|-|-|-|-|-|-|
 |0|0x00|1|0x01| | | |0| |73|0x49|SET| |0|0x00|ON_OFF|READ_IO1|-|-|-|-|-|-|-|
-|0|0x00|1|0x01|C|67|0x43|CALIBRATE| |-|-|-| |0|0x00|-|F0_MSB|F0_LSB|-|-|-|-|-|-|
-|0|0x00|1|0x01| | |0x00|0| |-|-|-| |0|0x00|-|-|-|-|-|-|-|-|-|
-|0|0x00|1|0x01| | |0x00|0| |-|-|-| |0|0x00|-|-|-|-|-|-|-|-|-|
-|0|0x00|1|0x01|P|80|0x50|PING| |-|-|-| |0|0x00|-|ADR_MSB|ADR_LSB|LOCAL_ADR_MSB|LOCAL_ADR_LSB|CTRL|ARG_1|ARG_2|CROSSOVER|
 
+## Master Console Commands
+These commands can be used by typing ``help`` in the command line
 
-![alt text](images/data_frame_structure.PNG)
-
+```
+help: Returns this text
+led0 (ADDRESS) (ON / OFF): turn LED0 on Device with address (ADRESS) on (ON) or off (OFF).
+led1 (ADDRESS) (ON / OFF): turn LED1 on Device with address (ADRESS) on (ON) or off (OFF). 
+blink: Blinks all LEDs twice.
+```
 # Zuweisung der Befehlswerte beispielhaft
 
 CTRL: Befehl
