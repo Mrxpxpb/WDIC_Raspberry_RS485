@@ -9,6 +9,7 @@ Descriptions = {
         'led0 (ADDRESS) (ON / OFF)': 'LED0 beim Gerät mit der Adresse (ADRESS) ein (ON) oder aus (OFF schalten).',
         'led1 (ADDRESS) (ON / OFF)': 'LED1 beim Gerät mit der Adresse (ADRESS) ein (ON) oder aus (OFF schalten).',
         'blink': 'Blinks all LEDs twice.',
+        'exit': 'Exits the programm',
 }
 device_dict = {}
 def main():
@@ -42,6 +43,8 @@ def main():
         elif len(words) == 1:
             if words[0] == "blink":
                 blink(addresses)
+            elif words[0] == "exit":
+                break
             else:
                 help()
         elif len(words) == 2:
