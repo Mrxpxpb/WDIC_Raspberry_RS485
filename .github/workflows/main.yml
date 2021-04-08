@@ -37,13 +37,6 @@ jobs:
           && git fetch --all \
           && git reset --hard origin \
           
-          "
-          echo 
-          echo ${bold}Run Serial.py $normal
-          echo
-          sshpass -p ${{ secrets.USER_PASSWORD }} ssh -o StrictHostKeyChecking=no -p ${{ secrets.VPS_PORT }} ${{ secrets.USER }}@${{ secrets.VPS_HOST }} \
-          "cd /home/pi/WDIC_Raspberry_RS485 \
-          && python3 -m pytest -v -s\
-          "
+          
       
         
