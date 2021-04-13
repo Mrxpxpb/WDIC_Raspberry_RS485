@@ -5,9 +5,9 @@ import threading
 
 commands = ['help']
 Descriptions = {
-        'help': 'Gibt diesen Hilfstext aus.',
-        'led0 (ADDRESS) (ON / OFF)': 'LED0 beim Gerät mit der Adresse (ADRESS) ein (ON) oder aus (OFF schalten).',
-        'led1 (ADDRESS) (ON / OFF)': 'LED1 beim Gerät mit der Adresse (ADRESS) ein (ON) oder aus (OFF schalten).',
+        'help': 'Returns this text',
+        'led0 (ADDRESS) (ON / OFF)': 'turn LED0 on Device with address (ADRESS) on (ON) or off (OFF). ',
+        'led1 (ADDRESS) (ON / OFF)': 'turn LED1 on Device with address (ADRESS) on (ON) or off (OFF). ',
         'blink': 'Blinks all LEDs twice.',
         'exit': 'Exits the programm',
 }
